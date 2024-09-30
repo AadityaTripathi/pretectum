@@ -13,25 +13,25 @@ const { Dragger } = Upload;
 
 const CsvUpload: React.FC = () => {
   const dispatch = useDispatch();
-  const csvData = useSelector((state: RootState) => state.csv.data); // Access the CSV data from Redux
-  // Function to handle CSV parsing
+  const csvData = useSelector((state: RootState) => state.csv.data); 
+  
   const handleFileUpload = (file: File) => {
     Papa.parse(file, {
       complete: (result: { data: FlightBookingInterface[]; }) => {
-        const [...rows] = result.data as FlightBookingInterface[]; // Extract header and rows
-        dispatch(setCsvData(rows)); // Dispatch the parsed rows to Redux
+        const [...rows] = result.data as FlightBookingInterface[]; 
+        dispatch(setCsvData(rows)); 
         message.success(`${file.name} file uploaded successfully.`);
       },
-      header: true, // Parse CSV with header
+      header: true, 
     });
   };
 
   const props = {
     beforeUpload: (file: File) => {
       handleFileUpload(file);
-      return false; // Prevent default upload behavior
+      return false; 
     },
-    showUploadList: false, // Hide upload list
+    showUploadList: false, 
   };
 
   return (

@@ -16,25 +16,25 @@ export const FileTable = () => {
     const [columns, setColumns] = React.useState<ColumnInterface[]>([]);
     const [filteredData, setFilteredData] = React.useState<FlightBookingInterface[] >([]);
     const [searchTerm, setSearchTerm] = React.useState<string>('');
-    const [selectedColumn, setSelectedColumn] = React.useState<string>(''); // Column filter
+    const [selectedColumn, setSelectedColumn] = React.useState<string>(''); 
     console.log(csvData);
 
     useEffect(() =>{
         setColumns(header.map((col) => ({ title: col, dataIndex: col }))); 
-        // Set table columns
+        
         setFilteredData(csvData.data); 
     },[csvData.data])
 
     const handleSearch = (value: string) => {
-        setSearchTerm(value);
-        
+        setSearchTerm(() => value);
+        let filtered
         if (selectedColumn) {
-          // Filter by specific column
+          
           filtered = csvData.data.filter((row) =>
-            String(row[`selectedColumn`]).toLowerCase().includes(value.toLowerCase())
+            String(row[selectedColumn]).toLowerCase().includes(value.toLowerCase())
           );
         } else {
-          // If no column is selected, filter by all columns (general search)
+          
           filtered = csvData.data.filter((row) =>
             Object.values(row).some((cell) =>
               String(cell).toLowerCase().includes(value.toLowerCase())
@@ -57,13 +57,12 @@ export const FileTable = () => {
         className="mr-4 mb-2 border-2 border-blue-500 rounded-md"
         style={{ width: 200 }}
       >
-        {/* Add an option for each column */}
         {header.map((col) => (
           <Option key={col} value={col}>
-            {col.replace(/_/g, ' ')} {/* Replace underscores with spaces for readability */}
+            {col.replace(/_/g, ' ')}
           </Option>
         ))}
-        <Option value="">All columns</Option> {/* Option to search in all columns */}
+        <Option value="">All columns</Option>
       </Select>
         <Input
         placeholder="Search..."

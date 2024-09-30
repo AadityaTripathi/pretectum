@@ -1,26 +1,26 @@
 export interface FlightBookingInterface {
-    airline_code: string;        // e.g., "AA"
-    airline_name: string;        // e.g., "American Airlines"
-    arrival_airport: string;     // e.g., "New York"
-    arrival_time: string;        // e.g., "1/10/2024 16:00"
-    baggage_type: string;        // e.g., "checked"
-    baggage_weight: string;      // e.g., "10"
-    booking_date: string;        // e.g., "12/1/2023 10:00"
-    booking_id: string;          // e.g., "1"
-    booking_status: string;      // e.g., "confirmed"
-    city: string;                // e.g., "Los Angeles"
-    country: string;             // e.g., "USA"
-    departure_airport: string;   // e.g., "Los Angeles"
-    departure_time: string;      // e.g., "1/10/2024 8:00"
-    duration: string;            // e.g., "238" (minutes)
-    flight_id: string;           // e.g., "101"
-    flight_number: string;       // e.g., "AA123"
-    passenger_email: string;     // e.g., "john.doe@example.com"
-    passenger_first_name: string;// e.g., "Aaron"
-    passenger_id: string;        // e.g., "1"
-    passenger_last_name: string; // e.g., "Doe"
-    passenger_phone: string;     // e.g., "555-0101"
-    payment_status: string;      // e.g., "completed"
-    total_price: string;         // e.g., "303"
+  airline_code: string;        
+  airline_name: string;        
+    arrival_airport: string;     
+    arrival_time: string;        
+    baggage_type: string;        
+    baggage_weight: string;      
+    booking_date: string;        
+    booking_id: string;          
+    booking_status: string;      
+    city: string;                
+    country: string;             
+    departure_airport: string;   
+    departure_time: string;      
+    duration: string;            
+    flight_id: string;           
+    flight_number: string;       
+    passenger_email: string;     
+    passenger_first_name: string;
+    passenger_id: string;        
+    passenger_last_name: string; 
+    passenger_phone: string;     
+    payment_status: string;      
+    total_price: string;         
   }
   
