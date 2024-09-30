@@ -1,4 +1,5 @@
 export interface FlightBookingInterface {
+  [key: string]: string;
   airline_code: string;        
   airline_name: string;        
     arrival_airport: string;     
