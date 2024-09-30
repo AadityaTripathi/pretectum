@@ -1,8 +1,9 @@
 // store/csvSlice.ts
+import { FlightBookingInterface } from '@/types/CsvDataInterface';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface CsvState {
-  data: string[][];  // Store the parsed CSV as a 2D array
+  data: FlightBookingInterface[]  // Store the parsed CSV as a 2D array
 }
 
 const initialState: CsvState = {
@@ -13,7 +14,7 @@ export const csvSlice = createSlice({
   name: 'csv',
   initialState,
   reducers: {
-    setCsvData: (state, action: PayloadAction<string[][]>) => {
+    setCsvData: (state, action: PayloadAction<FlightBookingInterface[]>) => {
       state.data = action.payload;
     },
   },

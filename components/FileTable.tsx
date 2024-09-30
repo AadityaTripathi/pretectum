@@ -1,32 +1,79 @@
 import React, { useEffect } from 'react'
-import {Table} from 'antd'
+import {Table, Input, Select} from 'antd'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/store/store'
+import { header } from '@/data/headerData'
+import { FlightBookingInterface } from '@/types/CsvDataInterface'
+const {Option} = Select;
+
+interface ColumnInterface{
+    title: string
+    dataIndex: string
+}
 
 export const FileTable = () => {
     const csvData = useSelector((state: RootState) => state.csv)
-    const [columns, setColumns] = React.useState<any[]>([]);
-    const [filteredData,setFilteredData] = React.useState<any[]>([]);
+    const [columns, setColumns] = React.useState<ColumnInterface[]>([]);
+    const [filteredData, setFilteredData] = React.useState<FlightBookingInterface[] >([]);
+    const [searchTerm, setSearchTerm] = React.useState<string>('');
+    const [selectedColumn, setSelectedColumn] = React.useState<string>(''); // Column filter
+    console.log(csvData);
 
-    const header = ['booking_id', 'flight_id', 'flight_number', 'airline_name', 'departure_airport',
-    'arrival_airport', 'departure_time', 'arrival_time', 'passenger_id',
-    'passenger_first_name', 'passenger_last_name', 'passenger_email',
-    'passenger_phone', 'booking_date', 'total_price', 'payment_status',
-    'baggage_weight', 'baggage_type', 'booking_status', 'airline_code',
-    'duration', 'country', 'city']
-    
     useEffect(() =>{
-        setColumns(header.map((col) => ({ title: col, dataIndex: col }))); // Set table columns
-    },[])
+        setColumns(header.map((col) => ({ title: col, dataIndex: col }))); 
+        // Set table columns
+        setFilteredData(csvData.data); 
+    },[csvData.data])
 
-
+    const handleSearch = (value: string) => {
+        setSearchTerm(value);
+        
+        if (selectedColumn) {
+          // Filter by specific column
+          filtered = csvData.data.filter((row) =>
+            String(row[`selectedColumn`]).toLowerCase().includes(value.toLowerCase())
+          );
+        } else {
+          // If no column is selected, filter by all columns (general search)
+          filtered = csvData.data.filter((row) =>
+            Object.values(row).some((cell) =>
+              String(cell).toLowerCase().includes(value.toLowerCase())
+            )
+          );
+        }
+        setFilteredData(filtered);
+      };
 
     return (
-    <div className='p-10'>
-
-        <input />
-        {/* <Table></Table> */}
-        <Table columns={columns} dataSource={csvData.data} scroll={{x:1000}}/>
+    <div className='p-10 overflow-auto'>
+        <Select
+        placeholder="Filter by column"
+        value={selectedColumn}
+        onChange={(value) => {
+            setSelectedColumn(value)
+            setSearchTerm('')
+            setFilteredData(csvData.data); 
+        }}
+        className="mr-4 mb-2 border-2 border-blue-500 rounded-md"
+        style={{ width: 200 }}
+      >
+        {/* Add an option for each column */}
+        {header.map((col) => (
+          <Option key={col} value={col}>
+            {col.replace(/_/g, ' ')} {/* Replace underscores with spaces for readability */}
+          </Option>
+        ))}
+        <Option value="">All columns</Option> {/* Option to search in all columns */}
+      </Select>
+        <Input
+        placeholder="Search..."
+        value={searchTerm}
+        onChange={(e) => handleSearch(e.target.value)}
+        className="mb-4 border-2 border-blue-500 rounded-md"
+        style={{ width: 200 }}
+      />
+        <Table columns={columns} className='border-2 border-blue-500 rounded-md'
+        dataSource={filteredData} scroll={{x:1000}}/>
     </div>
   )
 }

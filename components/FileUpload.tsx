@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setCsvData } from '../store/csvSlice';
 import { RootState } from '../store/store'; 
 import { FileTable } from './FileTable';
+import { FlightBookingInterface } from '@/types/CsvDataInterface';
 
 const { Dragger } = Upload;
 
@@ -16,8 +17,8 @@ const CsvUpload: React.FC = () => {
   // Function to handle CSV parsing
   const handleFileUpload = (file: File) => {
     Papa.parse(file, {
-      complete: (result: { data: string[][]; }) => {
-        const [...rows] = result.data as string[][]; // Extract header and rows
+      complete: (result: { data: FlightBookingInterface[]; }) => {
+        const [...rows] = result.data as FlightBookingInterface[]; // Extract header and rows
         dispatch(setCsvData(rows)); // Dispatch the parsed rows to Redux
         message.success(`${file.name} file uploaded successfully.`);
       },
@@ -34,14 +35,16 @@ const CsvUpload: React.FC = () => {
   };
 
   return (
-    <div className="p-8">
-      <Dragger {...props}>
-        <p className="ant-upload-drag-icon">
-          <InboxOutlined />
-        </p>
-        <p className="ant-upload-text">Click or drag file to this area to upload</p>
-        <p className="ant-upload-hint">Support for a single or bulk upload. Only CSV files allowed.</p>
-      </Dragger>
+    <div className="p-10">
+      <div className='w flex  justify-center'>
+        <Dragger {...props}>
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">Click or drag file to this area to upload</p>
+          <p className="ant-upload-hint">Support for a single or bulk upload. Only CSV files allowed.</p>
+        </Dragger>
+      </div>
 
       {csvData.length > 0 && (
         <FileTable/>
