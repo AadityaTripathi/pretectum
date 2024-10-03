@@ -10,6 +10,7 @@ const { Option } = Select;
 interface ColumnInterface {
   title: string;
   dataIndex: string;
+  width?: number; 
 }
 
 export const FileTable = () => {
@@ -17,19 +18,23 @@ export const FileTable = () => {
   const [columns, setColumns] = React.useState<ColumnInterface[]>([]);
   const [filteredData, setFilteredData] = React.useState<FlightBookingInterface[]>([]);
   const [searchTerms, setSearchTerms] = React.useState<{ [key: string]: string }>({});
-  const [selectedColumns, setSelectedColumns] = React.useState<string[]>([]); // Store selected columns
+  const [selectedColumns, setSelectedColumns] = React.useState<string[]>([]);
   const [sortColumn, setSortColumn] = React.useState<string | null>(null);
-  const [sortOrder, setSortOrder] = React.useState<'asc' | 'desc'>('asc'); // Track the sort order
+  const [sortOrder, setSortOrder] = React.useState<'asc' | 'desc'>('asc');
 
   useEffect(() => {
-    // Set table columns based on the CSV header
-    setColumns(header.map((col) => ({ title: col, dataIndex: col })));
-    // Initialize filtered data with the complete dataset
+    
+    setColumns(
+      header.map((col) => ({
+        title: col.replace(/_/g, ' '),
+        dataIndex: col,
+        width: Math.max(col.length * 10, 150), 
+      }))
+    );
     setFilteredData(csvData.data);
   }, [csvData.data]);
 
   const handleSearch = (value: string, column: string) => {
-    // Update search term for the specific column
     setSearchTerms((prevTerms) => ({
       ...prevTerms,
       [column]: value,
@@ -37,14 +42,12 @@ export const FileTable = () => {
   };
 
   const handleAddColumn = (value: string) => {
-    // Only add the column if it hasn't already been selected
     if (!selectedColumns.includes(value)) {
       setSelectedColumns((prevColumns) => [...prevColumns, value]);
     }
   };
 
   const handleRemoveColumn = (column: string) => {
-    // Remove the column from the selectedColumns array and delete its search term
     setSelectedColumns((prevColumns) => prevColumns.filter((col) => col !== column));
     setSearchTerms((prevTerms) => {
       const newTerms = { ...prevTerms };
@@ -53,11 +56,11 @@ export const FileTable = () => {
     });
   };
 
-  // Apply filters and sorting logic
+  
   useEffect(() => {
-    let filtered = [...csvData.data]; // Create a shallow copy of the data
+    let filtered = [...csvData.data];
 
-    // Apply filters first
+    
     Object.keys(searchTerms).forEach((column) => {
       const searchTerm = searchTerms[column];
       if (searchTerm) {
@@ -67,7 +70,7 @@ export const FileTable = () => {
       }
     });
 
-    // Apply sorting on filtered data
+    
     if (sortColumn) {
       filtered = [...filtered].sort((a, b) => {
         const aValue = String(a[sortColumn]);
@@ -97,10 +100,7 @@ export const FileTable = () => {
             className="mb-2 border-2 border-blue-500 rounded-md"
             style={{ width: 200 }}
           />
-          <Button
-            type="primary"
-            onClick={() => handleRemoveColumn(column)} // Remove filter on click
-          >
+          <Button type="primary" onClick={() => handleRemoveColumn(column)}>
             Remove
           </Button>
           {index === selectedColumns.length - 1 && (
@@ -111,7 +111,7 @@ export const FileTable = () => {
               style={{ width: 300 }}
             >
               {header
-                .filter((col) => !selectedColumns.includes(col)) // Prevent re-selecting already selected columns
+                .filter((col) => !selectedColumns.includes(col))
                 .map((col) => (
                   <Option key={col} value={col}>
                     {col.replace(/_/g, ' ')}
@@ -122,7 +122,6 @@ export const FileTable = () => {
         </div>
       ))}
 
-      {/* Initially show a dropdown for selecting the first column */}
       {selectedColumns.length === 0 && (
         <Select
           placeholder="Select a column to filter"
@@ -163,12 +162,12 @@ export const FileTable = () => {
         </Select>
       </div>
 
-      {/* Table Section */}
       <Table
         columns={columns}
         className="border-2 border-blue-500 rounded-md"
         dataSource={filteredData}
-        scroll={{ x: 1000 }}
+        scroll={{ x: 'max-content', y: 500}} 
+        tableLayout="auto" 
       />
     </div>
   );
