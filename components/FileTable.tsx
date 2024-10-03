@@ -89,10 +89,8 @@ export const FileTable = () => {
 
   return (
     <div className="p-10 overflow-auto">
-      {/* Filter Section */}
       {selectedColumns.map((column, index) => (
         <div key={column} className="mb-4  items-center space-x-4">
-          {/* Input for searching within the selected column */}
           <Input
             placeholder={`Search in ${column.replace(/_/g, ' ')}`}
             value={searchTerms[column] || ''}
@@ -137,7 +135,6 @@ export const FileTable = () => {
         </Select>
       )}
 
-      {/* Sorting Section */}
       <div className="mb-4 flex space-x-4">
         <Select
           placeholder="Sort by column"
